@@ -1,0 +1,140 @@
+---BVA(Boundary Value Analysis)---
+
+#include <iostream>
+
+using namespace std;
+
+int calculateDiscount(int price) {
+    if (price < 100) {
+        return 0;
+    } else if (price < 500) {
+        return price * 0.05;
+    } else if (price < 1000) {
+        return price * 0.1;
+    } else {
+        return price * 0.15;
+    }
+}
+
+void testDiscount() {
+    // Test lower boundary of input
+    int discount = calculateDiscount(99);
+    cout << "Discount for 99: " << discount << endl;
+
+    // Test upper boundary of input
+    discount = calculateDiscount(1000);
+    cout << "Discount for 1000: " << discount << endl;
+
+    // Test just above lower boundary of input
+    discount = calculateDiscount(100);
+    cout << "Discount for 100: " << discount << endl;
+
+    // Test just below upper boundary of input
+    discount = calculateDiscount(999);
+    cout << "Discount for 999: " << discount << endl;
+
+    // Test middle of input range
+    discount = calculateDiscount(500);
+    cout << "Discount for 500: " << discount << endl;
+}
+
+int main() {
+    testDiscount();
+    return 0;
+}
+
+
+Contoh kode di atas menguji sebuah fungsi calculateDiscount yang menerima satu argumen berupa harga barang dan mengembalikan nilai diskon yang berlaku sesuai dengan harga tersebut. 
+Fungsi ini memiliki tiga nilai batas: 100, 500, dan 1000. Ketika harga barang kurang dari 100, tidak ada diskon yang diberikan. 
+Jika harga barang antara 100 dan 499, diskon sebesar 5% diberikan. 
+Jika harga barang antara 500 dan 999, diskon sebesar 10% diberikan. 
+Jika harga barang 1000 atau lebih, diskon sebesar 15% diberikan.
+
+Pada kode pengujian, terdapat lima kasus uji yang dilakukan untuk menguji fungsi calculateDiscount menggunakan metode Boundary Value Analysis. 
+Kasus uji tersebut adalah:
+
+Test lower boundary of input: menguji kasus saat harga barang sama dengan 99, yang seharusnya tidak mendapat diskon.
+Test upper boundary of input: menguji kasus saat harga barang sama dengan 1000, yang seharusnya mendapat diskon 15%.
+Test just above lower boundary of input: menguji kasus saat harga barang sama dengan 100, yang seharusnya mendapat diskon 5%.
+Test just below upper boundary of input: menguji kasus saat harga barang sama dengan 999, yang seharusnya mendapat diskon 10%.
+Test middle of input range: menguji kasus saat harga barang sama dengan 500, yang seharusnya mendapat diskon 10%.
+
+Dengan menggunakan metode Boundary Value Analysis, kita dapat memilih beberapa nilai batas yang mewakili kasus uji ekstrim pada suatu fungsi. 
+Pada contoh kode di atas, kita telah memilih lima kasus uji yang mewakili semua nilai batas pada fungsi calculateDiscount. 
+Dengan memilih kasus uji yang tepat, kita dapat memastikan bahwa fungsi calculateDiscount berfungsi dengan benar pada semua nilai masukan
+
+
+---STT(State Transition Testing)---
+
+#include <iostream>
+using namespace std;
+
+enum State {
+    OFF,
+    STARTUP,
+    IDLE,
+    RUNNING,
+    ERROR
+};
+
+State getNextState(State current, int input) {
+    switch(current) {
+        case OFF:
+            if(input == 1) {
+                return STARTUP;
+            }
+            break;
+        case STARTUP:
+            if(input == 0) {
+                return IDLE;
+            } else if(input == 1) {
+                return ERROR;
+            }
+            break;
+        case IDLE:
+            if(input == 1) {
+                return RUNNING;
+            } else if(input == 2) {
+                return ERROR;
+            }
+            break;
+        case RUNNING:
+            if(input == 0) {
+                return IDLE;
+            } else if(input == 2) {
+                return ERROR;
+            }
+            break;
+        case ERROR:
+            return ERROR;
+    }
+    return current;
+}
+
+int main() {
+    State currentState = OFF;
+
+    int inputSequence[] = {1, 0, 1, 1, 0, 2};
+    int inputSize = sizeof(inputSequence) / sizeof(int);
+
+    for(int i = 0; i < inputSize; i++) {
+        State nextState = getNextState(currentState, inputSequence[i]);
+        cout << "State: " << currentState << " Input: " << inputSequence[i] << " Next State: " << nextState << endl;
+        currentState = nextState;
+    }
+
+    return 0;
+}
+
+
+Program ini menggunakan sebuah 'enum' yang mewakili state-state yang mungkin ada dalam sistem. 
+Kemudian, terdapat sebuah fungsi 'getNextState' yang menerima state saat ini dan input yang diberikan, 
+dan mengembalikan state berikutnya sesuai dengan tabel transisi state yang telah ditentukan.
+
+Di dalam fungsi 'main', terdapat sebuah array 'inputSequence' yang merepresentasikan rangkaian input yang akan diberikan pada sistem. 
+Program akan melakukan loop melalui seluruh input dan mencetak state saat ini, input yang diberikan, dan state berikutnya pada setiap langkah.
+
+State transition testing adalah teknik pengujian perangkat lunak yang bertujuan untuk menemukan kesalahan dalam perangkat lunak yang terkait dengan transisi antara state-state yang berbeda. 
+Pada program di atas, teknik ini diterapkan dengan melakukan pengujian terhadap transisi state pada sistem. 
+Dalam pengujian ini, setiap kombinasi transisi dari satu state ke state yang lain diperiksa untuk memastikan bahwa sistem berperilaku dengan benar.
+
